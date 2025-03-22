@@ -1,0 +1,6 @@
+websocket-client==1.8.0
+requests
+websocket
+flask
+flask_sock
+

